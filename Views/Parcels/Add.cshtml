@@ -1,0 +1,13 @@
+@model Parcel
+
+<h1>Add a parcel</h1>
+
+<form method="post" asp-controller="Parcels" asp-action="Add">
+    <partial name="_ParcelFields" model="Model" />
+    <button type="submit" class="btn btn-primary">Add</button>
+    <a asp-controller="Parcels" asp-action="Index">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

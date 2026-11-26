@@ -1,0 +1,20 @@
+@model Branch
+
+<h1>@Model.Name</h1>
+<p>@Model.Parish</p>
+
+@if (Model.Parcels.Count == 0)
+{
+    <p>No parcels for @Model.Name yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (Parcel parcel in Model.Parcels.OrderBy(each_parcel => each_parcel.TrackingCode))
+        {
+            <li><a asp-controller="Parcels" asp-action="Details" asp-route-id="@parcel.Id">@parcel.TrackingCode</a> for @parcel.Recipient (@parcel.Status)</li>
+        }
+    </ul>
+}
+
+<p><a asp-controller="Parcels" asp-action="Index">Back to the parcels</a></p>

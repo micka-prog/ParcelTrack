@@ -1,0 +1,13 @@
+@model Parcel
+
+<h1>Edit @Model.TrackingCode</h1>
+
+<form method="post" asp-controller="Parcels" asp-action="Edit" asp-route-id="@Model.Id">
+    <partial name="_ParcelFields" model="Model" />
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-controller="Parcels" asp-action="Index">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

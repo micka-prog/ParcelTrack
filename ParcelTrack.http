@@ -1,0 +1,97 @@
+@host = http://localhost:5420
+
+### 1. GET /api/parcels - Expect 200 OK, with fees (800, 650, 1250, 2000, 1250)
+GET {{host}}/api/parcels
+
+### 2. POST /api/parcels with no token - Expect 401 Unauthorized
+POST {{host}}/api/parcels
+Content-Type: application/json
+X-Client: Branch desk
+
+{
+  "trackingCode": "PT-200201",
+  "recipient": "Damion Clarke",
+  "weightKg": 4.2,
+  "status": "Received",
+  "branchId": 5
+}
+
+### 3. POST /api/auth/login as staff@parceltrack.test - Expect 200 OK + token
+# @name staffLogin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "staff@parceltrack.test",
+  "password": "Pass123!"
+}
+
+### 4. POST /api/auth/login as staff@parceltrack.test with wrong password - Expect 401 Unauthorized
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "staff@parceltrack.test",
+  "password": "WrongPassword!"
+}
+
+### 5. Request 2 again with Staff token - Expect 201 Created + Location header
+POST {{host}}/api/parcels
+Authorization: Bearer {{staffLogin.response.body.$.token}}
+Content-Type: application/json
+X-Client: Branch desk
+
+{
+  "trackingCode": "PT-200201",
+  "recipient": "Damion Clarke",
+  "weightKg": 4.2,
+  "status": "Received",
+  "branchId": 5
+}
+
+### 6. POST with Staff token, invalid tracking code AB-12 - Expect 400 Bad Request
+POST {{host}}/api/parcels
+Authorization: Bearer {{staffLogin.response.body.$.token}}
+Content-Type: application/json
+X-Client: Branch desk
+
+{
+  "trackingCode": "AB-12",
+  "recipient": "Damion Clarke",
+  "weightKg": 4.2,
+  "status": "Received",
+  "branchId": 5
+}
+
+### 7. POST with Staff token, no X-Client header - Expect 400 Bad Request
+POST {{host}}/api/parcels
+Authorization: Bearer {{staffLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "trackingCode": "PT-200202",
+  "recipient": "Nadine Walker",
+  "weightKg": 1.0,
+  "status": "Received",
+  "branchId": 1
+}
+
+### 8. DELETE /api/parcels/5 with Staff token - Expect 403 Forbidden
+DELETE {{host}}/api/parcels/5
+Authorization: Bearer {{staffLogin.response.body.$.token}}
+X-Client: Branch desk
+
+### 9. POST /api/auth/login as admin@parceltrack.test - Expect 200 OK + token
+# @name adminLogin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@parceltrack.test",
+  "password": "Pass123!"
+}
+
+### 10. DELETE /api/parcels/5 with Admin token - Expect 204 No Content
+DELETE {{host}}/api/parcels/5
+Authorization: Bearer {{adminLogin.response.body.$.token}}
+X-Client: Branch desk

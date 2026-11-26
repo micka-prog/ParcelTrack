@@ -1,0 +1,25 @@
+@model Parcel
+
+<h1>@Model.TrackingCode</h1>
+
+<table class="table w-auto">
+    <tr><th>Recipient</th><td>@Model.Recipient</td></tr>
+    <tr><th>Weight</th><td>@Model.WeightKg kg</td></tr>
+    <tr><th>Status</th><td>@Model.Status</td></tr>
+    <tr>
+        <th>Branch</th>
+        <td>
+            @if (Model.Branch != null)
+            {
+                <a asp-controller="Branches" asp-action="Details" asp-route-id="@Model.BranchId">@Model.Branch.Name</a>
+                <span>(@Model.Branch.Parish)</span>
+            }
+        </td>
+    </tr>
+    <tr>
+        <th>Delivery fee</th>
+        <td>Delivery fee: J$@(((decimal)ViewData["DeliveryFee"]!).ToString("N2"))</td>
+    </tr>
+</table>
+
+<p><a asp-controller="Parcels" asp-action="Index">Back to the parcels</a></p>

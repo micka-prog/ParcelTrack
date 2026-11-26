@@ -1,0 +1,8 @@
+@model Parcel
+
+<h1>Delete @Model.TrackingCode for @Model.Recipient?</h1>
+
+<form method="post" asp-controller="Parcels" asp-action="DeleteConfirmed" asp-route-id="@Model.Id">
+    <button type="submit" class="btn btn-danger">Yes, delete it</button>
+    <a asp-controller="Parcels" asp-action="Index">No, go back</a>
+</form>

@@ -1,0 +1,45 @@
+@model List<Parcel>
+
+<h1>Parcels</h1>
+<p>@Model.Count parcels</p>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+{
+    <p><a class="btn btn-primary" asp-controller="Parcels" asp-action="Add">Add a parcel</a></p>
+}
+
+<table class="table">
+    <tr>
+        <th>Tracking code</th>
+        <th>Recipient</th>
+        <th>Weight (kg)</th>
+        <th>Status</th>
+        <th>Branch</th>
+        <th></th>
+    </tr>
+    @foreach (Parcel parcel in Model)
+    {
+        <tr>
+            <td><a asp-controller="Parcels" asp-action="Details" asp-route-id="@parcel.Id">@parcel.TrackingCode</a></td>
+            <td>@parcel.Recipient</td>
+            <td>@parcel.WeightKg</td>
+            <td>@parcel.Status</td>
+            <td>
+                @if (parcel.Branch != null)
+                {
+                    <a asp-controller="Branches" asp-action="Details" asp-route-id="@parcel.BranchId">@parcel.Branch.Name</a>
+                }
+            </td>
+            <td>
+                @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                {
+                    <a asp-controller="Parcels" asp-action="Edit" asp-route-id="@parcel.Id">Edit</a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="text-danger ms-2" asp-controller="Parcels" asp-action="Delete" asp-route-id="@parcel.Id">Delete</a>
+                }
+            </td>
+        </tr>
+    }
+</table>

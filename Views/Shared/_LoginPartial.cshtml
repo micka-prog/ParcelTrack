@@ -1,0 +1,14 @@
+@* In the nav bar on every page. Signed in: who you are and Log out. Otherwise: Register and Log in. *@
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <span class="navbar-text ms-3">Hello, @User.Identity.Name</span>
+    @* Logging out changes something, so it is a POST form, never a link *@
+    <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/parcels" class="d-inline ms-2">
+        <button type="submit" class="btn btn-sm btn-outline-secondary">Log out</button>
+    </form>
+}
+else
+{
+    <a class="nav-link text-dark ms-3" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+}
